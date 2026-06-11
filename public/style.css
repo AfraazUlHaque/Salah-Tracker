@@ -126,6 +126,7 @@ header nav a.active { color:#064e3b; font-weight:700; }
 .progress-track { background:#f1f5f9; height:8px; border-radius:10px; overflow:hidden; }
 .progress-fill { background:linear-gradient(90deg, #10b981, #064e3b); height:100%; width:0%; transition:width 0.5s ease; }
 
+/* Desktop container definition */
 .prayer-container { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:20px; }
 .prayer-card { background:white; padding:24px; border-radius:var(--radius-premium); box-shadow:var(--shadow-sm); border:1px solid var(--border-color); border-top:4px solid #14b8a6; display:flex; flex-direction:column; }
 .prayer-card.upcoming { border-top-color:var(--accent-gold); transform:translateY(-4px); box-shadow:0 15px 25px var(--gold-glow); background:linear-gradient(180deg, #fff, #fffbeb); }
@@ -165,122 +166,7 @@ header nav a.active { color:#064e3b; font-weight:700; }
 
 footer { background:#090d16; color:#94a3b8; padding:20px; text-align:center; font-size:0.85rem; }
 
-/* ==========================================================================
-   🕌 ULTRA-RESPONSIVE MOBILE BREAKPOINTS (BILAL DASHBOARD)
-   ========================================================================== */
-
-@media screen and (max-width: 768px) {
-    /* 1. Global Container Padding Adjustment */
-    body {
-        padding: 10px;
-        font-size: 14px;
-    }
-
-    .container {
-        width: 100%;
-        max-width: 100%;
-        padding: 5px;
-    }
-
-    /* 2. Header and Geolocation Section Resizing */
-    header, .location-bar {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-        padding: 15px;
-    }
-
-    .location-bar span {
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    /* 3. Analytics Cards Layout (Stacking cards vertically or 2x2 grid) */
-    .analytics-grid {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
-        gap: 12px !important;
-    }
-
-    .analytics-card {
-        padding: 15px 10px !important;
-        text-align: center;
-    }
-
-    /* 4. Prayer Cards Grid Layout (1 Column for clean scrolling) */
-    #prayerGrid {
-        grid-template-columns: 1fr !important;
-        gap: 15px !important;
-    }
-
-    .prayer-card {
-        flex-direction: column;
-        padding: 18px !important;
-        text-align: center;
-        border-radius: 16px;
-    }
-
-    .prayer-card h3 {
-        flex-direction: row-reverse;
-        justify-content: space-between;
-        width: 100%;
-        margin-bottom: 8px;
-        font-size: 1.2rem;
-    }
-
-    .prayer-card .time {
-        font-size: 1.5rem !important;
-        margin: 10px 0;
-    }
-
-    .prayer-card .check-container {
-        width: 100%;
-        margin-top: 12px;
-    }
-
-    .checkbox-label {
-        width: 100%;
-        justify-content: center;
-        padding: 12px !important;
-        background: rgba(255, 255, 255, 0.05); /* Tapping easy karne ke liye safe target */
-        border-radius: 8px;
-    }
-
-    /* 5. Global Reflection Hub (Chat Window) Mobile Optimization */
-    .chat-container {
-        grid-template-columns: 1fr !important;
-        height: 400px; /* Mobile screen par sahi height block */
-    }
-
-    #chatMessages {
-        max-height: 300px !important;
-    }
-
-    .chat-input-area {
-        padding: 8px;
-    }
-
-    .chat-input-area input {
-        padding: 10px !important;
-    }
-
-    /* 6. Authentication Modal Responsive Box */
-    .modal-content {
-        width: 92% !important;
-        padding: 25px 20px !important;
-        margin: 10px;
-    }
-}
-
-/* Chhotu mobile screens ke liye extra tweaking */
-@media screen and (max-width: 480px) {
-    .analytics-grid {
-        grid-template-columns: 1fr !important; /* Pure stack on very small screens */
-    }
-    
-    .prayer-card .time {
-        font-size: 1.3rem !important;
-    }
-}
+/* Status logo definitions */
 .salah-logo {
     display: inline-flex;
     align-items: center;
@@ -289,16 +175,182 @@ footer { background:#090d16; color:#94a3b8; padding:20px; text-align:center; fon
     font-size: 1.15rem;
     font-weight: 500;
     letter-spacing: -0.3px;
-    color: #000000; /* Subtle off-white */
+    color: #000000;
     user-select: none;
 }
 
-/* Minimal indicator dot (Modern status icon style) */
 .logo-dot {
     width: 6px;
     height: 6px;
-    background-color: #01dfdf; /* Apple iOS Green */
+    background-color: #01dfdf;
     border-radius: 50%;
     display: inline-block;
     box-shadow: 0 0 8px #3dff6a;
+}
+
+/* ==========================================================================
+   🕌 ULTRA-RESPONSIVE MOBILE BREAKPOINTS (OPTIMIZED BILAL DASHBOARD)
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+    /* 1. Global Layout Breathing Space */
+    body {
+        font-size: 14px;
+    }
+
+    .dashboard-wrapper {
+        padding: 0 16px; /* Smooth professional padding for handheld screens */
+    }
+
+    /* 2. Apple-Style Compact Sticky Navbar */
+    header {
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px 20px;
+        text-align: center;
+    }
+
+    header nav {
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    header nav a {
+        font-size: 0.88rem;
+    }
+
+    .btn-logout {
+        margin-left: 0;
+        margin-top: 4px;
+    }
+
+    /* 3. Hero Adaptive Resizing */
+    .hero {
+        min-height: 40vh;
+        padding: 40px 20px;
+    }
+
+    .hero h1 {
+        font-size: 1.85rem;
+    }
+
+    .app-meta-badge {
+        font-size: 0.78rem;
+        padding: 6px 14px;
+    }
+
+    /* 4. Analytics Grid - Smooth 2-Column Responsive Matrix */
+    .analytics-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    .analytics-card, .analytics-card-highlight {
+        padding: 14px 12px !important;
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .a-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+    }
+
+    .a-info strong {
+        font-size: 1.1rem;
+    }
+
+    /* 5. Prayer Timings Main Container Fix (Synced layout name target) */
+    .prayer-container {
+        grid-template-columns: 1fr !important; /* Stack for vertical thumb scrolling */
+        gap: 14px !important;
+    }
+
+    .prayer-card {
+        padding: 18px !important;
+        border-radius: 16px;
+    }
+
+    .prayer-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .prayer-card .time {
+        font-size: 1.45rem !important;
+        margin: 6px 0;
+    }
+
+    /* Tappable Easy Targets for Safe Touch Selection */
+    .checkbox-label {
+        width: 100%;
+        justify-content: center;
+        padding: 10px !important;
+        background: #f8fafc; 
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        transition: background 0.2s;
+    }
+    
+    .checkbox-label:active {
+        background: #e6f4ea; /* Direct instant feedback upon touch */
+    }
+
+    /* 6. Quran & Hadith Module Optimization */
+    .hadith-card {
+        padding: 24px 16px;
+    }
+
+    .arabic-text {
+        font-size: 1.35rem;
+    }
+
+    .english-text {
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    /* 7. Reflection Hub (Chat Window) Selector Sync Fix */
+    .chat-luxury-container {
+        height: auto; 
+    }
+
+    .chat-messages {
+        height: 280px; /* Reduced vertical space for mobile layout */
+        padding: 14px;
+    }
+
+    .msg {
+        max-width: 85%; /* Make bubbles wider on small screens */
+    }
+
+    .chat-footer-input {
+        padding: 10px 14px;
+    }
+
+    .chat-footer-input input {
+        padding: 10px 16px;
+        font-size: 0.88rem;
+    }
+
+    /* 8. Authentication Modal Overlay & Sync Box Fix */
+    .auth-card {
+        width: 92% !important;
+        padding: 28px 20px !important;
+        margin: 10px;
+        border-radius: 20px;
+    }
+}
+
+/* Extra Tweaking for small forms factor screens (under 480px) */
+@media screen and (max-width: 480px) {
+    .analytics-grid {
+        grid-template-columns: 1fr !important; /* Single layout chain stack */
+    }
+
+    .timings-mini-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
 }

@@ -134,20 +134,36 @@ app.get('/api/history/analytics', async (req, res) => {
     }
 });
 
-// ── 3. ASTRONOMICAL PRAYER TIMINGS CALCULATOR ──
-// ── 3. ASTRONOMICAL PRAYER TIMINGS CALCULATOR ──
+// ── 3. ASTRONOMICAL PRAYER TIMINGS CALCULATOR (PERFECT PARSING FIX) ──
 app.get('/api/timings', (req, res) => {
     try {
         const lat = parseFloat(req.query.lat) || 28.5616;
         const lng = parseFloat(req.query.lng) || 77.2802;
         const clientTz = req.query.tz || 'Asia/Kolkata'; 
 
-        // 🔥 FOOLPROOF FIX FOR RENDER: Direct date component extraction to kill the UTC shift
-        const targetLocaleString = new Date().toLocaleString("en-US", { timeZone: clientTz });
-        const localParts = new Date(targetLocaleString);
-        
-        // Hamein srf target timezone ka Year, Month aur Day chahiye bina kisi server offset ke
-        const date = new Date(localParts.getFullYear(), localParts.getMonth(), localParts.getDate());
+        // 🔥 THE ULTIMATE RENDER TIMEZONE FIX: Extract parts explicitly using Intl to avoid string parsing bugs
+        const formatter = new Intl.DateTimeFormat('en-US', {
+            timeZone: clientTz,
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: false
+        });
+
+        const parts = formatter.formatToParts(new Date());
+        const partValues = {};
+        parts.forEach(p => partValues[p.type] = p.value);
+
+        // Render's Node runtime will safely construct this local instances without skipping to the next day
+        const localYear = parseInt(partValues.year);
+        const localMonth = parseInt(partValues.month) - 1; // JS Months are 0-11
+        const localDay = parseInt(partValues.day);
+
+        // Build precise local midnight representation for Adhan library input
+        const date = new Date(localYear, localMonth, localDay);
 
         const coordinates = new adhan.Coordinates(lat, lng);
         const params = adhan.CalculationMethod.Karachi();
@@ -155,7 +171,7 @@ app.get('/api/timings', (req, res) => {
         
         const prayerTimes = new adhan.PrayerTimes(coordinates, date, params);
 
-        // Time formatting ke dauran explicit timezone offset lagana zaroori hai
+        // Strict component-based clean formatter
         const formatTime = (timeObj) => {
             if (!timeObj || isNaN(timeObj.getTime())) return '--:-- --';
             return timeObj.toLocaleTimeString('en-US', { 
