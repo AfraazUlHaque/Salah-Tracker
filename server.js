@@ -135,15 +135,19 @@ app.get('/api/history/analytics', async (req, res) => {
 });
 
 // ── 3. ASTRONOMICAL PRAYER TIMINGS CALCULATOR ──
+// ── 3. ASTRONOMICAL PRAYER TIMINGS CALCULATOR ──
 app.get('/api/timings', (req, res) => {
     try {
         const lat = parseFloat(req.query.lat) || 28.5616;
         const lng = parseFloat(req.query.lng) || 77.2802;
-        const clientTz = req.query.tz || 'Asia/Kolkata'; // Frontend se timezone receive kiya ya Asia/Kolkata backup rkha
+        const clientTz = req.query.tz || 'Asia/Kolkata'; 
 
-        // 🔥 FIX: Server chahe Render ke kisi bhi foreign cloud region par ho, Date hamesha client local timezone ke hisab se initiate hoga
-        const targetLocaleDateString = new Date().toLocaleString("en-US", { timeZone: clientTz });
-        const date = new Date(targetLocaleDateString);
+        // 🔥 FOOLPROOF FIX FOR RENDER: Direct date component extraction to kill the UTC shift
+        const targetLocaleString = new Date().toLocaleString("en-US", { timeZone: clientTz });
+        const localParts = new Date(targetLocaleString);
+        
+        // Hamein srf target timezone ka Year, Month aur Day chahiye bina kisi server offset ke
+        const date = new Date(localParts.getFullYear(), localParts.getMonth(), localParts.getDate());
 
         const coordinates = new adhan.Coordinates(lat, lng);
         const params = adhan.CalculationMethod.Karachi();
@@ -151,7 +155,7 @@ app.get('/api/timings', (req, res) => {
         
         const prayerTimes = new adhan.PrayerTimes(coordinates, date, params);
 
-        // 🔥 FIX: Formatting ko explicit dynamic client timezone pass kiya taaki offsets zero ho sakein
+        // Time formatting ke dauran explicit timezone offset lagana zaroori hai
         const formatTime = (timeObj) => {
             if (!timeObj || isNaN(timeObj.getTime())) return '--:-- --';
             return timeObj.toLocaleTimeString('en-US', { 
@@ -185,7 +189,6 @@ app.get('/api/timings', (req, res) => {
         res.status(500).json({ error: "Calculations breakdown inside node thread." });
     }
 });
-
 app.get('/api/hadith', (req, res) => {
     const hadithPool = [
     { arabic: 'إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ', text: 'Actions are judged by their intentions, and every person will get what they intended.', source: 'Sahih al-Bukhari 1' },
