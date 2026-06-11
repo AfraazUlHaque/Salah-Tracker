@@ -2,7 +2,11 @@ let socket;
 let currentUser = null;
 let userCoords = null; 
 
-const BACKEND_URL = 'http://localhost:3040';
+// 🔥 AUTOMATIC ENVIRONMENT DETECTOR: Live par relative path chalega, local testing par localhost.
+const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:3040' 
+    : '';
+
 const today = new Date();
 const todayKey = today.toISOString().split('T')[0];
 let checkedPrayers = {};
@@ -176,7 +180,7 @@ function fetchAccurateTimings() {
             setupCountdownClock(times);
             
             if (currentUser) {
-                syncUserHistory(true); // True pass kiya taaki first time load par cards render ho sakein
+                syncUserHistory(true); 
             } else {
                 renderPrayers(globalTimes);
             }
@@ -196,22 +200,16 @@ function syncUserHistory(shouldRenderPrayers = false) {
             const maxPossible = daysTracked * 5;
             const efficiency = maxPossible > 0 ? Math.round((totalPrayers / maxPossible) * 100) : 0;
 
-            // Stats update karein
             document.getElementById('analytics-total-prayers').textContent = `${totalPrayers} Prayers`;
             document.getElementById('analytics-total-days').textContent = `${daysTracked} Days`;
             document.getElementById('analytics-efficiency').textContent = `${efficiency}%`;
 
-            // Aaj ki date ka record dhoodhein
             const todayRecord = analytics.rawHistory ? analytics.rawHistory.find(r => r.dateKey === todayKey) : null;
-            
-            // Ticks data ko global checkedPrayers mein set karein
             checkedPrayers = todayRecord && todayRecord.prayers ? todayRecord.prayers : {};
             
-            // Agar pehli baar load hua hai ya force kiya hai, toh fresh cards render karein
             if (shouldRenderPrayers) {
                 renderPrayers(globalTimes);
             } else {
-                // Sirf progress bar update karein agar card pehle se bane hain
                 updateProgressBarUI();
             }
         })
@@ -223,6 +221,7 @@ function syncUserHistory(shouldRenderPrayers = false) {
             }
         });
 }
+
 function renderPrayers(times) {
     const grid = document.getElementById('prayerGrid');
     if (!grid) return; 
@@ -252,11 +251,9 @@ function renderPrayers(times) {
 
 // ── BULLETPROOF MARK AS COMPLETED LOGIC ──
 function togglePrayer(key) {
-    // 1. Instantly local state change karein
     checkedPrayers[key] = !checkedPrayers[key];
     const isChecked = checkedPrayers[key];
     
-    // 2. Card ka class bina page re-render kiye turant badlein (smooth check experience)
     const card = document.getElementById('card-' + key);
     if (card) {
         if (isChecked) { 
@@ -268,14 +265,13 @@ function togglePrayer(key) {
     }
     updateProgressBarUI();
 
-    // 3. Backend update silent hit chalayein aur uske baad sirf top analytics numbers refresh karein
     fetch(`${BACKEND_URL}/api/history/toggle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: currentUser, dateKey: todayKey, prayerKey: key, isChecked: isChecked })
     })
     .then(() => {
-        syncUserHistory(false); // false pass kiya taaki poora cards layout disturb ya uncheck na ho!
+        syncUserHistory(false); 
     });
 }
 
@@ -354,9 +350,8 @@ function setupSocketChat() {
     if (socket) socket.disconnect(); 
     
     const chatWindow = document.getElementById('chatMessages');
-    if (chatWindow) chatWindow.innerHTML = ''; // Pehle clear karein
+    if (chatWindow) chatWindow.innerHTML = ''; 
 
-    // 1. Pehle Database se purani chat history load karein
     fetch(`${BACKEND_URL}/api/chat/history`)
         .then(res => res.json())
         .then(messages => {
@@ -367,12 +362,12 @@ function setupSocketChat() {
                 msgDiv.innerHTML = `<div class="msg-bubble">${msg.text}</div><div class="msg-meta">${isMine ? 'You' : msg.alias} · ${msg.timestamp}</div>`;
                 if(chatWindow) chatWindow.appendChild(msgDiv);
             });
-            if(chatWindow) chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll down to latest message
+            if(chatWindow) chatWindow.scrollTop = chatWindow.scrollHeight; 
         })
         .catch(err => console.error("Error fetching chat logs:", err));
 
-    // 2. Live messages ke liye socket connection banayein
-    socket = io(BACKEND_URL);
+    // ⚡ Socket Cloud Configuration Fix: Pure relative path binding for automatic routing
+    socket = BACKEND_URL === '' ? io() : io(BACKEND_URL);
     
     socket.on('incomingMessage', (msg) => {
         const isMine = msg.alias === currentUser;
