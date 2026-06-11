@@ -345,12 +345,80 @@ footer { background:#090d16; color:#94a3b8; padding:20px; text-align:center; fon
 }
 
 /* Extra Tweaking for small forms factor screens (under 480px) */
-@media screen and (max-width: 480px) {
-    .analytics-grid {
-        grid-template-columns: 1fr !important; /* Single layout chain stack */
+@media screen and (max-width: 768px) {
+    /* --- 1. APPLE-STYLE COMPACT FIXED NAVBAR --- */
+    header {
+        flex-direction: row !important; /* Forces row alignment to stop stacking elements vertically */
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 12px 16px !important;
+        gap: 0 !important;
+        background: rgba(255, 255, 255, 0.85) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
     }
 
-    .timings-mini-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
+    /* Hide the text logo text on tiny devices to save valuable prime header real estate if needed, 
+       or keep it ultra compact */
+    header .logo {
+        font-size: 1rem !important;
+        gap: 6px !important;
+        flex-shrink: 0;
+    }
+
+    /* --- 2. MOBILE-ORIENTED HORIZONTAL SCROLL NAV TRACK --- */
+    header nav {
+        display: flex !important;
+        align-items: center !important;
+        gap: 16px !important;
+        overflow-x: auto; /* Enables thumb sliding for navigation elements */
+        white-space: nowrap; /* Prevents text from breaking into lines */
+        padding: 4px 8px;
+        margin: 0 8px;
+        scrollbar-width: none; /* Hides raw ugly scrollbars on Firefox */
+        -webkit-overflow-scrolling: touch; /* Butter smooth momentum scrolling on iOS Safari */
+    }
+
+    header nav::-webkit-scrollbar {
+        display: none; /* Hides native scroll track indicator bar on Chrome/Safari */
+    }
+
+    header nav a {
+        font-size: 0.85rem !important;
+        padding: 6px 10px;
+        border-radius: 20px;
+        background: #f1f5f9; /* Subtle pill backdrop for mobile tapping context */
+        color: var(--text-muted);
+        transition: all 0.2s ease;
+    }
+
+    header nav a.active {
+        background: #e6f4ea !important;
+        color: #064e3b !important;
+    }
+
+    /* --- 3. PREMIUM FLOATING LOGOUT COMPONENT --- */
+    .btn-logout {
+        margin: 0 !important;
+        padding: 6px 12px !important;
+        font-size: 0.8rem !important;
+        border-radius: 30px !important;
+        flex-shrink: 0; /* Keeps it strictly scaled without any squishing updates */
+        background: rgba(252, 165, 165, 0.1);
+        border: 1px solid rgba(248, 113, 113, 0.4) !important;
+        color: #dc2626 !important;
+    }
+    
+    .btn-logout:active {
+        background: #fef2f2;
+    }
+
+    /* --- Global Layout Breathing Adjustments --- */
+    .dashboard-wrapper {
+        padding: 0 14px;
+    }
+    
+    .hero {
+        padding: 30px 16px !important;
     }
 }
