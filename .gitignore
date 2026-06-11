@@ -17,3 +17,5 @@ Thumbs.db
 logs
 *.log
 npm-debug.log*
+
+.wwebjs_auth/
