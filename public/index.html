@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bilal Reminder — Premium Salah Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="authModal" class="auth-modal-overlay">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2>Salah Tracker</h2>
+                <p id="authSubTitle">Sign in to sync your spiritual records</p>
+            </div>
+            <div id="authError" class="auth-error-msg" style="display:none;"></div>
+            <div class="auth-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="authUsername" placeholder="Enter your username..." autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="authPassword" placeholder="••••••••">
+                </div>
+                <button id="btnAuthAction" onclick="handleAuthSubmit()" class="btn-auth-submit">Sign In</button>
+                
+                <button onclick="handleGuestSkip()" class="btn-auth-skip">
+                    ✨ Skip & Explore as Guest
+                </button>
+
+                <div class="auth-toggle-prompt">
+                    <span id="authToggleText">New to Bilal Reminder?</span> 
+                    <a href="javascript:void(0)" onclick="toggleAuthMode()" id="authLinkToggle">Create an Account</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="salah-logo">
+    <span class="logo-dot"></span>
+    Your Salah Tracker
+</div>
+        <nav>
+            <a href="#home" class="nav-link active">Dashboard</a>
+            <a href="#prayers" class="nav-link">Prayer Times</a>
+            <a href="#hadith" class="nav-link">Daily Light</a>
+            <a href="#chat" class="nav-link">Community</a>
+            <button onclick="handleLogout()" class="btn-logout">Logout</button>
+        </nav>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-backdrop"></div>
+        <div class="hero-content">
+            <div class="quran-verse">"Indeed, prayer prohibits immorality and wrongdoing." — Quran 29:45</div>
+            <h1> Allahummabarik <span id="userGreeting"✨>Believer</span>✨</h1>
+            
+            <div class="app-meta-badge">
+                <span id="dateLocDisplay" class="meta-item">📍 Fetching secure satellite location coordinates...</span>
+                <span class="meta-divider">|</span>
+                <span id="hijriDate" class="meta-item">🌙 Syncing Hijri...</span>
+            </div>
+
+            <div class="countdown-card">
+                <span id="nextPrayerName">Next Commandment</span>
+                <div id="countdownTimer">00:00:00</div>
+            </div>
+        </div>
+    </section>
+
+    <main class="dashboard-wrapper">
+        <section id="analytics" class="analytics-section" style="margin-top:-40px; position:relative; z-index:10; margin-bottom:40px;">
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <span class="a-icon">📿</span>
+                    <div class="a-info"><span class="a-label">Total Namaz Offered</span><strong id="analytics-total-prayers">0 Prayers</strong></div>
+                </div>
+                <div class="analytics-card">
+                    <span class="a-icon">📅</span>
+                    <div class="a-info"><span class="a-label">Days Logged</span><strong id="analytics-total-days">0 Days</strong></div>
+                </div>
+                <div class="analytics-card-highlight">
+                    <span class="a-icon">✨</span>
+                    <div class="a-info"><span class="a-label">Spiritual Consistency</span><strong id="analytics-efficiency">0%</strong></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="overview-section" style="margin-bottom: 40px;">
+            <h2 class="section-title">☀️ Astronomical Gateways</h2>
+            <div class="timings-mini-grid">
+                <div class="timing-box"><span>🌅 Sunrise</span><strong id="time-sunrise">--:--</strong></div>
+                <div class="timing-box"><span>☀️ Zawal Peak</span><strong id="time-dhuhr">--:--</strong></div>
+                <div class="timing-box"><span>🌇 Maghrib Time</span><strong id="time-maghrib">--:--</strong></div>
+                <div class="timing-box"><span>🌌 Mid-Night</span><strong id="time-midnight">--:--</strong></div>
+                <div class="timing-box-highlight"><span>📿 Tahajjud Horizon</span><strong id="time-lastThird">--:--</strong></div>
+            </div>
+        </section>
+
+        <section class="progress-section" style="margin-bottom:45px;">
+            <div class="progress-card-wrap">
+                <div class="progress-header"><h3>Today's Progress Metric</h3><span id="progressLabel">0 / 5 Completed</span></div>
+                <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+        </section>
+
+        <section id="prayers" class="prayer-section" style="margin-bottom:50px;">
+            <h2 class="section-title">Daily Namaz Tracker & Checklist</h2>
+            <div class="prayer-container" id="prayerGrid">
+                </div>
+        </section>
+
+        <section id="hadith" class="hadith-section" style="margin-bottom:50px;">
+            <div class="hadith-card">
+                <div class="hadith-header"><div class="line"></div><span class="ornament">✨ Hadith of the Day ✨</span><div class="line"></div></div>
+                <p id="hadithArabic" class="arabic-text">...</p>
+                <p id="hadithText" class="english-text">Loading prophetic illumination stream...</p>
+                <span id="hadithSource" class="hadith-meta">— Loading Citation</span>
+                <button onclick="loadHadith()" class="btn-premium-action">Read Another Narration</button>
+            </div>
+        </section>
+
+        <section id="chat" class="chat-section" style="margin-bottom:60px;">
+            <div class="chat-luxury-container">
+                <div class="chat-header-row">
+                    <h2>💬 Global Reflection Hub</h2>
+                    <div class="anon-badge"><span class="indicator"></span> Active Session: <strong id="myAlias">Profile Token</strong></div>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-footer-input">
+                    <input type="text" id="chatInput" placeholder="Write a reflection or thought..." maxlength="300" onkeydown="if(event.key==='Enter')sendChat()">
+                    <button class="btn-send-chat" onclick="sendChat()">➤</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; Developed  By  AfraazUL Haque .</p>
+        </div> 
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.2/dist/socket.io.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
